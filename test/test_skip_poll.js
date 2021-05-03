@@ -46,11 +46,22 @@ describe('skipPoll', function() {
     it('never skip for queries returning extra', function() {
       test({a: 1, $count: true});
       test({$distinct: {field: 'a'}});
+      assertSkips({op: [{p: ['x'], dummyOp: 1}]}, {a: 'test'});
 
       function test(query) {
         assertNotSkips({op: []}, query);
         assertNotSkips({op: [{p: ['a'], dummyOp: 1}]}, query);
         assertNotSkips({op: [{p: ['x'], dummyOp: 1}]}, query);
+      }
+    });
+
+    it('should not error out', function() {
+      test({a: 'test'});
+
+      function test(query) {
+        assertSkips({op: ['position']}, query);
+        assertNotSkips({op: ['position', {r: true, i: {x: 317, y: 349}}]}, query);
+        assertNotSkips({op: ['a', {r: true, i: {x: 317, y: 349}}]}, query);
       }
     });
 

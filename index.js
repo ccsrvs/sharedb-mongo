@@ -994,10 +994,18 @@ function getInnerFields(params, fields) {
 function opContainsAnyField(op, fields) {
   for (var i = 0; i < op.length; i++) {
     var component = op[i];
-    if (component.p.length === 0) {
-      return true;
-    } else if (fields[component.p[0]]) {
-      return true;
+    if (typeof(component) === 'string') {
+      if (component.length === 0) {
+        return true;
+      } else if (fields[component]) {
+        return true;
+      }
+    } else {
+      if (!component.p || component.p.length === 0) {
+        return true;
+      } else if (fields[component.p[0]]) {
+        return true;
+      }
     }
   }
   return false;
